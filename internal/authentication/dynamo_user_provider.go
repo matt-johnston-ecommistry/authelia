@@ -18,10 +18,10 @@ type DynamoUserProvider struct {
 
 // DynamoDetailsModel is the model of user details in the file database.
 type DynamoUserDetailsModel struct {
-	Username       string   `dynamodb:"username" valid:"required"`
-	HashedPassword string   `dynamodb:"password" valid:"required"`
-	Email          string   `dynamodb:"email"`
-	Groups         []string `dynamodb:"groups"`
+	Username       string   `dynamodbav:"username" valid:"required"`
+	HashedPassword string   `dynamodbav:"password" valid:"required"`
+	Email          string   `dynamodbav:"email"`
+	Groups         []string `dynamodbav:"groups"`
 }
 
 // NewFileUserProvider creates a new instance of FileUserProvider.
