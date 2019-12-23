@@ -61,6 +61,8 @@ func startServer() {
 		userProvider = authentication.NewFileUserProvider(config.AuthenticationBackend.File.Path)
 	} else if config.AuthenticationBackend.Ldap != nil {
 		userProvider = authentication.NewLDAPUserProvider(*config.AuthenticationBackend.Ldap)
+	} else if config.AuthenticationBackend.Dynamo != nil {
+		userProvider = authentication.NewDynamoUserProvider(config.AuthenticationBackend.Dynamo)
 	} else {
 		log.Fatalf("Unrecognized authentication backend")
 	}

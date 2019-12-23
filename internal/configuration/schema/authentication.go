@@ -15,6 +15,12 @@ type LDAPAuthenticationBackendConfiguration struct {
 	Password           string `yaml:"password"`
 }
 
+// DynamoAuthenticationBackendConfiguration represents the configuration related to Dynamo server.
+type DynamoAuthenticationBackendConfiguration struct {
+	TableName  string `yaml:"table_name"`
+	AwsProfile string   `yaml:"aws_profile"`
+}
+
 // FileAuthenticationBackendConfiguration represents the configuration related to file-based backend
 type FileAuthenticationBackendConfiguration struct {
 	Path string `yaml:"path"`
@@ -22,6 +28,7 @@ type FileAuthenticationBackendConfiguration struct {
 
 // AuthenticationBackendConfiguration represents the configuration related to the authentication backend.
 type AuthenticationBackendConfiguration struct {
-	Ldap *LDAPAuthenticationBackendConfiguration `yaml:"ldap"`
-	File *FileAuthenticationBackendConfiguration `yaml:"file"`
+	Ldap   *LDAPAuthenticationBackendConfiguration   `yaml:"ldap"`
+	File   *FileAuthenticationBackendConfiguration   `yaml:"file"`
+	Dynamo *DynamoAuthenticationBackendConfiguration `yaml:"dynamodb"`
 }
