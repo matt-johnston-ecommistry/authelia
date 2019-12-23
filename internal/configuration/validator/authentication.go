@@ -18,6 +18,12 @@ func validateFileAuthenticationBackend(configuration *schema.FileAuthenticationB
 	}
 }
 
+func validateDynamoAuthenticationBackend(configuration *schema.DynamoAuthenticationBackendConfiguration, validator *schema.StructValidator) {
+	if configuration.TableName == "" {
+		validator.Push(errors.New("Please provide a `table_name` for the users database in `authentication_backend`"))
+	}
+}
+
 func validateLdapURL(ldapURL string, validator *schema.StructValidator) string {
 	u, err := url.Parse(ldapURL)
 
@@ -90,17 +96,27 @@ func validateLdapAuthenticationBackend(configuration *schema.LDAPAuthenticationB
 
 // ValidateAuthenticationBackend validates and update authentication backend configuration.
 func ValidateAuthenticationBackend(configuration *schema.AuthenticationBackendConfiguration, validator *schema.StructValidator) {
-	if configuration.Ldap == nil && configuration.File == nil {
-		validator.Push(errors.New("Please provide `ldap` or `file` object in `authentication_backend`"))
+	if configuration.Ldap == nil && configuration.File == nil && configuration.Dynamo == nil {
+		validator.Push(errors.New("Please provide `ldap`, `dynamodb`, or `file` object in `authentication_backend`"))
 	}
 
 	if configuration.Ldap != nil && configuration.File != nil {
 		validator.Push(errors.New("You cannot provide both `ldap` and `file` objects in `authentication_backend`"))
 	}
 
+	if configuration.Ldap != nil && configuration.Dynamo != nil {
+		validator.Push(errors.New("You cannot provide both `ldap` and `dynamo` objects in `authentication_backend`"))
+	}
+
+	if configuration.File != nil && configuration.Dynamo != nil {
+		validator.Push(errors.New("You cannot provide both `file` and `dynamo` objects in `authentication_backend`"))
+	}
+
 	if configuration.File != nil {
 		validateFileAuthenticationBackend(configuration.File, validator)
 	} else if configuration.Ldap != nil {
 		validateLdapAuthenticationBackend(configuration.Ldap, validator)
+	} else if configuration.Dynamo != nil {
+		validateDynamoAuthenticationBackend(configuration.Dynamo, validator)
 	}
 }
