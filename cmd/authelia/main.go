@@ -72,6 +72,8 @@ func startServer() {
 		storageProvider = storage.NewPostgreSQLProvider(*config.Storage.PostgreSQL)
 	} else if config.Storage.MySQL != nil {
 		storageProvider = storage.NewMySQLProvider(*config.Storage.MySQL)
+	} else if config.Storage.Dynamo != nil {
+		storageProvider = storage.NewDynamoProvider(config.Storage.Dynamo)
 	} else if config.Storage.Local != nil {
 		storageProvider = storage.NewSQLiteProvider(config.Storage.Local.Path)
 	} else {
