@@ -25,9 +25,18 @@ type PostgreSQLStorageConfiguration struct {
 	SSLMode                 string `yaml:"sslmode"`
 }
 
+// DynamoStorageConfiguration represents the configuration of the DynamoDB Host
+type DynamoStorageConfiguration struct {
+	AwsProfile   string `yaml:"aws_profile"`
+	UserTable    string `yaml:"user_table"`
+	TokenTable   string `yaml:"token_table"`
+	AuthLogTable string `yaml:"authlog_table"`
+}
+
 // StorageConfiguration represents the configuration of the storage backend.
 type StorageConfiguration struct {
 	Local      *LocalStorageConfiguration      `yaml:"local"`
 	MySQL      *MySQLStorageConfiguration      `yaml:"mysql"`
 	PostgreSQL *PostgreSQLStorageConfiguration `yaml:"postgres"`
+	Dynamo     *DynamoStorageConfiguration     `yaml:"dynamodb"`
 }

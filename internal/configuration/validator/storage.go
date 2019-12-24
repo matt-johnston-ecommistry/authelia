@@ -8,14 +8,16 @@ import (
 
 // ValidateSQLStorage validates storage configuration.
 func ValidateSQLStorage(configuration *schema.StorageConfiguration, validator *schema.StructValidator) {
-	if configuration.Local == nil && configuration.MySQL == nil && configuration.PostgreSQL == nil {
-		validator.Push(errors.New("A storage configuration must be provided. It could be 'local', 'mysql' or 'postgres'"))
+	if configuration.Local == nil && configuration.MySQL == nil && configuration.PostgreSQL == nil && configuration.Dynamo == nil {
+		validator.Push(errors.New("A storage configuration must be provided. It could be 'local', 'mysql', 'dynamo', or 'postgres'"))
 	}
 
 	if configuration.MySQL != nil {
 		validateSQLConfiguration(&configuration.MySQL.SQLStorageConfiguration, validator)
 	} else if configuration.PostgreSQL != nil {
 		validatePostgreSQLConfiguration(configuration.PostgreSQL, validator)
+	} else if configuration.Dynamo != nil {
+		validateDynamoConfiguration(configuration.Dynamo, validator)
 	} else if configuration.Local != nil {
 		validateLocalStorageConfiguration(configuration.Local, validator)
 	}
@@ -28,6 +30,20 @@ func validateSQLConfiguration(configuration *schema.SQLStorageConfiguration, val
 
 	if configuration.Database == "" {
 		validator.Push(errors.New("A database must be provided"))
+	}
+}
+
+func validateDynamoConfiguration(configuration *schema.DynamoStorageConfiguration, validator *schema.StructValidator) {
+	if configuration.UserTable == "" {
+		validator.Push(errors.New("User Table must be provided"))
+	}
+
+	if configuration.TokenTable == "" {
+		validator.Push(errors.New("Token Table must be provided"))
+	}
+
+	if configuration.AuthLogTable == "" {
+		validator.Push(errors.New("Auth Log Table must be provided"))
 	}
 }
 
